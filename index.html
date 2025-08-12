@@ -138,24 +138,30 @@
             z-index: 10;
             cursor: pointer;
             user-select: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         th:hover {
-            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            background: linear-gradient(135deg, #5a6fd8, #6b42a0);
             transform: translateY(-1px);
         }
 
-        .sort-arrow {
-            display: inline-block;
-            margin-left: 5px;
+        th.sortable::after {
+            content: " ↕️";
             font-size: 0.8rem;
-            opacity: 0.7;
+            opacity: 0.6;
         }
 
-        .sort-active {
+        th.sort-asc::after {
+            content: " ⬆️";
+            font-size: 0.8rem;
             opacity: 1;
-            font-weight: bold;
+        }
+
+        th.sort-desc::after {
+            content: " ⬇️";
+            font-size: 0.8rem;
+            opacity: 1;
         }
 
         td {
@@ -389,27 +395,26 @@
 
         <div class="note">
             <strong>📊 Benchmark Notes:</strong> Geekbench 6 CPU scores are actual/estimated from user submissions. GPU scores estimated from relative performance data. 3DMark scores approximate from 2017 review data. All configurations include every possible CPU/RAM/Storage permutation that was actually available.
-            <br><br>
-            <strong>🔄 Sorting:</strong> Click any column header to sort the data. Click again to reverse the sort order. Sort arrows (▲▼) indicate the current sort column and direction.
+            <br><strong>🔄 Sorting:</strong> Click any column header to sort data. Click again to reverse sort order. Sorting works with all filters and search.
         </div>
 
         <div class="table-container">
             <table id="performanceTable">
                 <thead>
                     <tr>
-                        <th onclick="sortTable('rank')">Rank <span class="sort-arrow" id="sort-rank">▲</span></th>
-                        <th onclick="sortTable('year')">Year <span class="sort-arrow" id="sort-year">▲</span></th>
-                        <th onclick="sortTable('model')">Model <span class="sort-arrow" id="sort-model">▲</span></th>
-                        <th onclick="sortTable('cpu')">CPU <span class="sort-arrow" id="sort-cpu">▲</span></th>
-                        <th onclick="sortTable('baseGhz')">Base/Turbo GHz <span class="sort-arrow" id="sort-baseGhz">▲</span></th>
-                        <th onclick="sortTable('ram')">RAM <span class="sort-arrow" id="sort-ram">▲</span></th>
-                        <th onclick="sortTable('storage')">Storage <span class="sort-arrow" id="sort-storage">▲</span></th>
-                        <th onclick="sortTable('graphics')">Graphics <span class="sort-arrow" id="sort-graphics">▲</span></th>
-                        <th onclick="sortTable('singleCore')">GB6 CPU Single <span class="sort-arrow" id="sort-singleCore">▲</span></th>
-                        <th onclick="sortTable('multiCore')">GB6 CPU Multi <span class="sort-arrow" id="sort-multiCore">▲</span></th>
-                        <th onclick="sortTable('gpu')">GB6 GPU (est.) <span class="sort-arrow" id="sort-gpu">▲</span></th>
-                        <th onclick="sortTable('mark3d')">3DMark (est.) <span class="sort-arrow" id="sort-mark3d">▲</span></th>
-                        <th onclick="sortTable('price')">Release Price <span class="sort-arrow" id="sort-price">▲</span></th>
+                        <th class="sortable" onclick="sortTable('rank')">Rank</th>
+                        <th class="sortable" onclick="sortTable('year')">Year</th>
+                        <th class="sortable" onclick="sortTable('model')">Model</th>
+                        <th class="sortable" onclick="sortTable('cpu')">CPU</th>
+                        <th class="sortable" onclick="sortTable('baseGhz')">Base/Turbo GHz</th>
+                        <th class="sortable" onclick="sortTable('ram')">RAM</th>
+                        <th class="sortable" onclick="sortTable('storage')">Storage</th>
+                        <th class="sortable" onclick="sortTable('graphics')">Graphics</th>
+                        <th class="sortable" onclick="sortTable('singleCore')">GB6 CPU Single</th>
+                        <th class="sortable" onclick="sortTable('multiCore')">GB6 CPU Multi</th>
+                        <th class="sortable" onclick="sortTable('gpu')">GB6 GPU (est.)</th>
+                        <th class="sortable" onclick="sortTable('mark3d')">3DMark (est.)</th>
+                        <th class="sortable" onclick="sortTable('price')">Release Price</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -460,24 +465,65 @@
             { rank: 14, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '8GB @1867MHz', storage: '1TB', graphics: 'HD 615', singleCore: 980, multiCore: 1900, gpu: 1450, mark3d: 510, price: '$2349' },
             { rank: 13, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '256GB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$1949' },
             { rank: 12, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '512GB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$2149' },
-            { rank: 11, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '1TB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$2549' },
-
-            // Additional theoretical configurations that might have existed
-            { rank: 10, year: 2015, model: 'MacBook8,1', cpu: 'Core M-5Y31', baseGhz: 1.1, turboGhz: 2.4, ram: '8GB @1600MHz', storage: '512GB', graphics: 'HD 5300', singleCore: 680, multiCore: 1200, gpu: 850, mark3d: 320, price: '$1599' },
-            { rank: 9, year: 2016, model: 'MacBook9,1', cpu: 'Core m3-6Y30', baseGhz: 1.1, turboGhz: 2.2, ram: '8GB @1866MHz', storage: '1TB', graphics: 'HD 515', singleCore: 696, multiCore: 1370, gpu: 1125, mark3d: 425, price: '$1999' },
-            { rank: 8, year: 2016, model: 'MacBook9,1', cpu: 'Core m5-6Y54', baseGhz: 1.2, turboGhz: 2.7, ram: '8GB @1866MHz', storage: '256GB', graphics: 'HD 515', singleCore: 750, multiCore: 1450, gpu: 1150, mark3d: 435, price: '$1449' },
-            { rank: 7, year: 2016, model: 'MacBook9,1', cpu: 'Core m7-6Y75', baseGhz: 1.3, turboGhz: 3.1, ram: '8GB @1866MHz', storage: '256GB', graphics: 'HD 515', singleCore: 800, multiCore: 1550, gpu: 1200, mark3d: 455, price: '$1799' },
-            { rank: 6, year: 2017, model: 'MacBook10,1', cpu: 'Core m3-7Y32', baseGhz: 1.2, turboGhz: 3.0, ram: '8GB @1867MHz', storage: '256GB', graphics: 'HD 615', singleCore: 855, multiCore: 1622, gpu: 1375, mark3d: 480, price: '$1249' },
-            { rank: 5, year: 2017, model: 'MacBook10,1', cpu: 'Core i5-7Y54', baseGhz: 1.3, turboGhz: 3.2, ram: '8GB @1867MHz', storage: '256GB', graphics: 'HD 615', singleCore: 870, multiCore: 1705, gpu: 1400, mark3d: 490, price: '$1549' },
-            { rank: 4, year: 2017, model: 'MacBook10,1', cpu: 'Core i5-7Y54', baseGhz: 1.3, turboGhz: 3.2, ram: '16GB @1867MHz', storage: '512GB', graphics: 'HD 615', singleCore: 875, multiCore: 1720, gpu: 1410, mark3d: 495, price: '$1899' },
-            { rank: 3, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '8GB @1867MHz', storage: '512GB', graphics: 'HD 615', singleCore: 980, multiCore: 1900, gpu: 1450, mark3d: 510, price: '$1849' },
-            { rank: 2, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '512GB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$2049' },
-            { rank: 1, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '1TB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$2449' }
+            { rank: 1, year: 2017, model: 'MacBook10,1', cpu: 'Core i7-7Y75', baseGhz: 1.4, turboGhz: 3.6, ram: '16GB @1867MHz', storage: '1TB', graphics: 'HD 615', singleCore: 985, multiCore: 1920, gpu: 1460, mark3d: 515, price: '$2549' }
         ];
 
         let currentFilter = 'all';
         let filteredData = [...performanceData];
         let currentSort = { column: 'rank', direction: 'asc' };
+
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+
+            updateSortHeaders();
+
+            filteredData.sort((a, b) => {
+                let valueA = a[column];
+                let valueB = b[column];
+
+                if (column === 'price') {
+                    valueA = parseFloat(valueA.replace('$', '').replace(',', ''));
+                    valueB = parseFloat(valueB.replace('$', '').replace(',', ''));
+                } else if (column === 'ram') {
+                    const matchA = valueA.match(/(\d+)MHz/);
+                    const matchB = valueB.match(/(\d+)MHz/);
+                    valueA = matchA ? parseInt(matchA[1]) : 0;
+                    valueB = matchB ? parseInt(matchB[1]) : 0;
+                } else if (column === 'storage') {
+                    const matchA = valueA.match(/(\d+)GB/);
+                    const matchB = valueB.match(/(\d+)GB/);
+                    valueA = matchA ? parseInt(matchA[1]) : 0;
+                    valueB = matchB ? parseInt(matchB[1]) : 0;
+                } else if (typeof valueA === 'string') {
+                    valueA = valueA.toLowerCase();
+                    valueB = valueB.toLowerCase();
+                }
+
+                if (valueA < valueB) return currentSort.direction === 'asc' ? -1 : 1;
+                if (valueA > valueB) return currentSort.direction === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            renderTable(filteredData);
+        }
+
+        function updateSortHeaders() {
+            document.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            const headers = document.querySelectorAll('th.sortable');
+            const columnIndex = ['rank', 'year', 'model', 'cpu', 'baseGhz', 'ram', 'storage', 'graphics', 'singleCore', 'multiCore', 'gpu', 'mark3d', 'price'].indexOf(currentSort.column);
+            
+            if (columnIndex >= 0 && headers[columnIndex]) {
+                headers[columnIndex].classList.add(currentSort.direction === 'asc' ? 'sort-asc' : 'sort-desc');
+            }
+        }
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
@@ -514,7 +560,6 @@
         }
 
         function filterByYear(year) {
-            // Update active tab
             document.querySelectorAll('.year-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -527,30 +572,25 @@
         function applyFilters() {
             let filtered = [...performanceData];
 
-            // Year filter
             if (currentFilter !== 'all') {
                 filtered = filtered.filter(item => item.year.toString() === currentFilter);
             }
 
-            // CPU filter
             const cpuFilter = document.getElementById('cpuFilter').value;
             if (cpuFilter) {
                 filtered = filtered.filter(item => item.cpu.includes(cpuFilter));
             }
 
-            // RAM filter
             const ramFilter = document.getElementById('ramFilter').value;
             if (ramFilter) {
                 filtered = filtered.filter(item => item.ram === ramFilter);
             }
 
-            // Storage filter
             const storageFilter = document.getElementById('storageFilter').value;
             if (storageFilter) {
                 filtered = filtered.filter(item => item.storage.includes(storageFilter));
             }
 
-            // Search filter
             const searchTerm = document.getElementById('searchBox').value.toLowerCase();
             if (searchTerm) {
                 filtered = filtered.filter(item => 
@@ -561,109 +601,42 @@
             }
 
             filteredData = filtered;
-            sortData(filteredData);
+            
+            if (currentSort.column && filteredData.length > 0) {
+                filteredData.sort((a, b) => {
+                    let valueA = a[currentSort.column];
+                    let valueB = b[currentSort.column];
+
+                    if (currentSort.column === 'price') {
+                        valueA = parseFloat(valueA.replace('$', '').replace(',', ''));
+                        valueB = parseFloat(valueB.replace('$', '').replace(',', ''));
+                    } else if (currentSort.column === 'ram') {
+                        const matchA = valueA.match(/(\d+)MHz/);
+                        const matchB = valueB.match(/(\d+)MHz/);
+                        valueA = matchA ? parseInt(matchA[1]) : 0;
+                        valueB = matchB ? parseInt(matchB[1]) : 0;
+                    } else if (currentSort.column === 'storage') {
+                        const matchA = valueA.match(/(\d+)GB/);
+                        const matchB = valueB.match(/(\d+)GB/);
+                        valueA = matchA ? parseInt(matchA[1]) : 0;
+                        valueB = matchB ? parseInt(matchB[1]) : 0;
+                    } else if (typeof valueA === 'string') {
+                        valueA = valueA.toLowerCase();
+                        valueB = valueB.toLowerCase();
+                    }
+
+                    if (valueA < valueB) return currentSort.direction === 'asc' ? -1 : 1;
+                    if (valueA > valueB) return currentSort.direction === 'asc' ? 1 : -1;
+                    return 0;
+                });
+            }
+            
             renderTable(filteredData);
         }
 
-        function sortTable(column) {
-            // Toggle sort direction if clicking the same column
-            if (currentSort.column === column) {
-                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
-            } else {
-                currentSort.column = column;
-                currentSort.direction = 'asc';
-            }
-            
-            // Update sort arrows
-            updateSortArrows();
-            
-            // Sort and render
-            sortData(filteredData);
-            renderTable(filteredData);
-        }
-
-        function sortData(data) {
-            data.sort((a, b) => {
-                let valueA = a[currentSort.column];
-                let valueB = b[currentSort.column];
-                
-                // Handle special cases for different data types
-                switch (currentSort.column) {
-                    case 'rank':
-                    case 'year':
-                    case 'baseGhz':
-                    case 'turboGhz':
-                    case 'singleCore':
-                    case 'multiCore':
-                    case 'gpu':
-                    case 'mark3d':
-                        // Numeric comparison
-                        valueA = Number(valueA);
-                        valueB = Number(valueB);
-                        break;
-                    
-                    case 'price':
-                        // Remove $ and convert to number
-                        valueA = Number(valueA.replace('
-
-        // Initialize the table
-        updateSortArrows();
-        renderTable(performanceData);
-    </script>
-</body>
-</html>, '').replace(',', ''));
-                        valueB = Number(valueB.replace('
-
         // Initialize the table
         renderTable(performanceData);
-    </script>
-</body>
-</html>, '').replace(',', ''));
-                        break;
-                    
-                    case 'ram':
-                        // Extract numeric value from RAM string for sorting
-                        valueA = parseInt(valueA.match(/\d+/)[0]);
-                        valueB = parseInt(valueB.match(/\d+/)[0]);
-                        break;
-                    
-                    case 'storage':
-                        // Extract numeric value from storage string
-                        valueA = parseInt(valueA.match(/\d+/)[0]);
-                        valueB = parseInt(valueB.match(/\d+/)[0]);
-                        break;
-                    
-                    default:
-                        // String comparison
-                        valueA = valueA.toString().toLowerCase();
-                        valueB = valueB.toString().toLowerCase();
-                }
-                
-                if (currentSort.direction === 'asc') {
-                    return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-                } else {
-                    return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-                }
-            });
-        }
-
-        function updateSortArrows() {
-            // Reset all arrows
-            document.querySelectorAll('.sort-arrow').forEach(arrow => {
-                arrow.classList.remove('sort-active');
-                arrow.textContent = '▲';
-            });
-            
-            // Set active arrow
-            const activeArrow = document.getElementById(`sort-${currentSort.column}`);
-            if (activeArrow) {
-                activeArrow.classList.add('sort-active');
-                activeArrow.textContent = currentSort.direction === 'asc' ? '▲' : '▼';
-            }
-        }
-
-        // Initialize the table
-        renderTable(performanceData);
+        updateSortHeaders();
     </script>
 </body>
 </html>
