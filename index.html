@@ -136,6 +136,26 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-1px);
+        }
+
+        .sort-arrow {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .sort-active {
+            opacity: 1;
+            font-weight: bold;
         }
 
         td {
@@ -369,25 +389,27 @@
 
         <div class="note">
             <strong>📊 Benchmark Notes:</strong> Geekbench 6 CPU scores are actual/estimated from user submissions. GPU scores estimated from relative performance data. 3DMark scores approximate from 2017 review data. All configurations include every possible CPU/RAM/Storage permutation that was actually available.
+            <br><br>
+            <strong>🔄 Sorting:</strong> Click any column header to sort the data. Click again to reverse the sort order. Sort arrows (▲▼) indicate the current sort column and direction.
         </div>
 
         <div class="table-container">
             <table id="performanceTable">
                 <thead>
                     <tr>
-                        <th>Rank</th>
-                        <th>Year</th>
-                        <th>Model</th>
-                        <th>CPU</th>
-                        <th>Base/Turbo GHz</th>
-                        <th>RAM</th>
-                        <th>Storage</th>
-                        <th>Graphics</th>
-                        <th>GB6 CPU Single</th>
-                        <th>GB6 CPU Multi</th>
-                        <th>GB6 GPU (est.)</th>
-                        <th>3DMark (est.)</th>
-                        <th>Release Price</th>
+                        <th onclick="sortTable('rank')">Rank <span class="sort-arrow" id="sort-rank">▲</span></th>
+                        <th onclick="sortTable('year')">Year <span class="sort-arrow" id="sort-year">▲</span></th>
+                        <th onclick="sortTable('model')">Model <span class="sort-arrow" id="sort-model">▲</span></th>
+                        <th onclick="sortTable('cpu')">CPU <span class="sort-arrow" id="sort-cpu">▲</span></th>
+                        <th onclick="sortTable('baseGhz')">Base/Turbo GHz <span class="sort-arrow" id="sort-baseGhz">▲</span></th>
+                        <th onclick="sortTable('ram')">RAM <span class="sort-arrow" id="sort-ram">▲</span></th>
+                        <th onclick="sortTable('storage')">Storage <span class="sort-arrow" id="sort-storage">▲</span></th>
+                        <th onclick="sortTable('graphics')">Graphics <span class="sort-arrow" id="sort-graphics">▲</span></th>
+                        <th onclick="sortTable('singleCore')">GB6 CPU Single <span class="sort-arrow" id="sort-singleCore">▲</span></th>
+                        <th onclick="sortTable('multiCore')">GB6 CPU Multi <span class="sort-arrow" id="sort-multiCore">▲</span></th>
+                        <th onclick="sortTable('gpu')">GB6 GPU (est.) <span class="sort-arrow" id="sort-gpu">▲</span></th>
+                        <th onclick="sortTable('mark3d')">3DMark (est.) <span class="sort-arrow" id="sort-mark3d">▲</span></th>
+                        <th onclick="sortTable('price')">Release Price <span class="sort-arrow" id="sort-price">▲</span></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -455,6 +477,7 @@
 
         let currentFilter = 'all';
         let filteredData = [...performanceData];
+        let currentSort = { column: 'rank', direction: 'asc' };
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
@@ -538,7 +561,105 @@
             }
 
             filteredData = filtered;
-            renderTable(filtered);
+            sortData(filteredData);
+            renderTable(filteredData);
+        }
+
+        function sortTable(column) {
+            // Toggle sort direction if clicking the same column
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'asc';
+            }
+            
+            // Update sort arrows
+            updateSortArrows();
+            
+            // Sort and render
+            sortData(filteredData);
+            renderTable(filteredData);
+        }
+
+        function sortData(data) {
+            data.sort((a, b) => {
+                let valueA = a[currentSort.column];
+                let valueB = b[currentSort.column];
+                
+                // Handle special cases for different data types
+                switch (currentSort.column) {
+                    case 'rank':
+                    case 'year':
+                    case 'baseGhz':
+                    case 'turboGhz':
+                    case 'singleCore':
+                    case 'multiCore':
+                    case 'gpu':
+                    case 'mark3d':
+                        // Numeric comparison
+                        valueA = Number(valueA);
+                        valueB = Number(valueB);
+                        break;
+                    
+                    case 'price':
+                        // Remove $ and convert to number
+                        valueA = Number(valueA.replace('
+
+        // Initialize the table
+        updateSortArrows();
+        renderTable(performanceData);
+    </script>
+</body>
+</html>, '').replace(',', ''));
+                        valueB = Number(valueB.replace('
+
+        // Initialize the table
+        renderTable(performanceData);
+    </script>
+</body>
+</html>, '').replace(',', ''));
+                        break;
+                    
+                    case 'ram':
+                        // Extract numeric value from RAM string for sorting
+                        valueA = parseInt(valueA.match(/\d+/)[0]);
+                        valueB = parseInt(valueB.match(/\d+/)[0]);
+                        break;
+                    
+                    case 'storage':
+                        // Extract numeric value from storage string
+                        valueA = parseInt(valueA.match(/\d+/)[0]);
+                        valueB = parseInt(valueB.match(/\d+/)[0]);
+                        break;
+                    
+                    default:
+                        // String comparison
+                        valueA = valueA.toString().toLowerCase();
+                        valueB = valueB.toString().toLowerCase();
+                }
+                
+                if (currentSort.direction === 'asc') {
+                    return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
+                } else {
+                    return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
+                }
+            });
+        }
+
+        function updateSortArrows() {
+            // Reset all arrows
+            document.querySelectorAll('.sort-arrow').forEach(arrow => {
+                arrow.classList.remove('sort-active');
+                arrow.textContent = '▲';
+            });
+            
+            // Set active arrow
+            const activeArrow = document.getElementById(`sort-${currentSort.column}`);
+            if (activeArrow) {
+                activeArrow.classList.add('sort-active');
+                activeArrow.textContent = currentSort.direction === 'asc' ? '▲' : '▼';
+            }
         }
 
         // Initialize the table
